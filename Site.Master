@@ -1,0 +1,236 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="NewIndustrial.Site" %>
+<%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<!DOCTYPE html>
+
+<html>
+<head id="Head1" runat="server">
+     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <link rel="shortcut icon" href="~/Images/CaptureLogo.png" />
+    <style type="text/css">
+        .loader
+        {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 9999; /*background: url('images/loading.gif') no-repeat; */
+        }
+        div.transbox
+        {
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            opacity: 0.6;
+            filter: alpha(opacity=60); /* For IE8 and earlier */
+        }
+    </style>
+     <script type="text/javascript">
+         //Put your JavaScript code here.
+         function OnClientLoad(sender, args) {
+             var items = sender.get_allItems();
+             for (var i = 0; i < items.length; i++) {
+                 items[i].get_expandHandleElement().style.display = "none";
+             }
+         }
+         function onRequestStart(sender, args) {
+             if (args.get_eventTarget().indexOf("BtnExport") >= 0) {
+                 args.set_enableAjax(false);
+             }
+         }
+    </script>
+    <telerik:radcodeblock id="RadCodeBlock1" runat="server">
+        <script type="text/javascript">    
+           //<![CDATA[
+
+            function OpenUser() {
+
+                //radopen(null, "WinBuilding");
+                $find("<%=WinUser.ClientID %>").show();
+
+            }
+            //]]>
+        </script>
+    </telerik:radcodeblock>
+    <script type="text/javascript" src="../JS/jquery-latest.js"></script>
+    <script type="text/javascript" src="../JS/ConfirmActions.js"></script>
+    <script type="text/javascript">
+
+
+        $(window).load(function () {
+            $('div.loader').fadeOut(1000);
+        });
+        function onClicking(sender, eventArgs) {
+
+
+            document.getElementById('loader').style.display = '';
+
+
+        }
+        function OnClientItemClicked(sender, args) {
+            var item = args.get_item();
+
+            if (item.get_level() == 0) {
+                document.getElementById('loader').style.display = 'none';
+            }
+
+            else {
+                document.getElementById('loader').style.display = '';
+            }
+            var itemValue = args.get_item().get_value();
+            if (itemValue == "Sync") { return confirm('Are You Sure You Want To Sync?'); }
+
+        }
+        function hidediv(arg) {
+            //$(document.getElementsByClassName("NotificationDIV")).show();
+
+            $(document.querySelectorAll(".NotificationDIV")).show();
+            var t = setTimeout("alertMsg()", 15000); //15 sec wait and call alertMsg function
+        }
+        function alertMsg() {
+            // $(document.getElementsByClassName("NotificationDIV")).hide();
+            $(document.querySelectorAll(".NotificationDIV")).hide();
+        }
+        
+
+    </script>
+    <title>Stores</title>
+    <style type="text/css">
+        html, body, form
+        {
+            margin: 0px;
+            padding: 0px;
+            height: 100%;
+            overflow:auto !important;
+
+        }
+        .mainContentPane 
+        {
+            overflow-y:scroll !important;
+        }
+    </style>
+    <asp:ContentPlaceHolder ID="head" runat="server"> 
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <div id="loader" class="loader">
+        <div class="transbox">
+            <asp:Image ID="Image3" runat="server" ImageUrl="~/Images/loading.gif" Style="position: absolute;
+                left: 50%; top: 50%; margin-left: -10px; /* -1 * image width / 2 */
+            margin-top: -10px; /* -1 * image height / 2 */" />
+        </div>
+    </div>
+    <form id="form1" runat="server">
+    <telerik:radscriptmanager runat="server"></telerik:radscriptmanager>
+    <telerik:radformdecorator id="QsfFromDecorator" runat="server" decoratedcontrols="All"
+        enableroundedcorners="false" />
+    <telerik:radskinmanager id="RadSkinManager1" runat="server" skin="Windows7">
+    </telerik:radskinmanager>
+    <telerik:radwindowmanager id="RadWindowManager1" runat="server">
+      <Localization Cancel="<%$ Resources:Resource, Cancel %>" OK="<%$ Resources:Resource, OK %>"
+            No="<%$ Resources:Resource, No %>" Yes="<%$ Resources:Resource, Yes %>" />
+    </telerik:radwindowmanager>
+    <telerik:radajaxmanager id="RadAjaxManager1" runat="server">
+    <ClientEvents OnRequestStart="onRequestStart"></ClientEvents>
+        <AjaxSettings>
+            <telerik:AjaxSetting AjaxControlID="GV_ManPowerDetailsTemp">
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="GV_ManPowerDetailsTemp"></telerik:AjaxUpdatedControl>
+                </UpdatedControls>
+            </telerik:AjaxSetting>
+        </AjaxSettings>
+    </telerik:radajaxmanager>
+    <telerik:radajaxloadingpanel id="RadAjaxLoadingPanel1" runat="server">
+    </telerik:radajaxloadingpanel>
+    <div style="background-color: #EDF7FD; height: 125px; width: 100%">
+        <div id="Div1" runat="server" style="position:relative; float: left; top: 5px">
+        <table style="float: right; position: relative; top: 0px; left: 10px; font-family: Segoe UI, Arial, sans-serif;">
+        <tr>
+        <td> 
+            <asp:ImageButton ID="ImageButton2" runat="server" ToolTip="Hedab Al-Majd" ImageUrl="~/Images/Capture2.png"
+                Enabled="false" Height="109px" Width="141px" /></td>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;<asp:ImageButton ID="ImageButton1" runat="server" ImageUrl="~/Images/Home.png"
+                ToolTip="Home" PostBackUrl="~/Forms/Dashboard.aspx" Width="34px" Height="34px"
+                Style="position: relative; top: -5px; left: 0px" />&nbsp;&nbsp;</td>
+        <td>&nbsp;</td>
+                
+                <td>&nbsp;&nbsp;&nbsp;</td>
+                <td>&nbsp;<asp:ImageButton ID="ImageButton4" runat="server" ImageUrl="~/Images/Dashboard/user.png"
+                ToolTip="<%$ Resources:Resource, User020 %>" PostBackUrl="~/Forms/Users.aspx" Width="34px" Height="34px"
+                Style="position: relative; top: -5px; left: 0px" />&nbsp;&nbsp;</td>
+        </tr>
+        </table>                                                           
+        </div>
+        <div class="headerTop">
+            <div id="Div2" runat="server" style="position: absolute; top: 2px; text-align:center; width:100%;height:40px">
+                <a id="TitleLink" href="~/Forms/Dashboard.aspx" runat="server" style="text-decoration: none">
+                    <asp:Label ID="LtrlTitle" runat="server" Style="font-size: x-large; font-family: Segoe UI, Arial, sans-serif;"
+                        ForeColor="#007E59" Text="نظام إدارة المخازن "> </asp:Label>
+                        <br />
+                        <asp:Label ID="LtrlTitleEn" runat="server" Style="font-size: large; font-family: Segoe UI, Arial, sans-serif;"
+                        ForeColor="#007E59" Text="Store Management System "> </asp:Label></a>
+                <br />
+                <br />
+            </div>
+        </div>
+        <div>
+            <table style="float: right; position: relative; top: 20px; right: 10px; font-family: Segoe UI, Arial, sans-serif;">
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>
+                        <asp:Label ID="LblSubTitile" runat="server" Text=""> </asp:Label>
+                        &nbsp; &nbsp; &nbsp;<asp:Label ID="LblLogIn" Text="Welcome:" runat="server"></asp:Label>
+                        &nbsp;<asp:Label ID="Lbl_UserName" runat="server"></asp:Label>
+                        &nbsp;
+                        <asp:LinkButton ID="IBtnLogOff" runat="server" ToolTip="Log Off" PostBackUrl="~/Login.aspx">
+                            <asp:Image ID="Image2" runat="server" Style="position: relative; top: 10px" ImageUrl="~/Images/Logoff.ico"
+                                Width="34px" Height="34px" />
+                        </asp:LinkButton>
+                    </td>
+                    <td>
+                        &nbsp;
+                        <asp:ImageButton ID="IBtnLang" runat="server" Height="24px" Style="position: relative;
+                            top: 10px" ToolTip="Change Language" OnClick="IBtnLang_Click" ImageUrl="~/Images/SA.png" />
+                    </td>
+                    <td><br />
+                        &nbsp;&nbsp;&nbsp;
+                    </td>
+                </tr>
+              
+            </table>
+        </div>
+    </div>
+    <telerik:radsplitter id="SpltrMain" runat="server" height="80%" width="100%" orientation="Horizontal">
+      
+        <telerik:RadPane ID="contentPane" runat="server" CssClass="mainContentPane" Width="100%"
+            Scrolling="None" Height="80%" ExpandMode="FullExpandedItem">
+            <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
+                <ContentTemplate>
+                    <asp:UpdatePanel ID="UPError" runat="server">
+                        <ContentTemplate>
+                            <div id="DvError" class="NotificationDIV" runat="server" style="text-align: center;
+                                vertical-align: middle; height: auto; width: 100%; display: none; font-family: Segoe UI, Arial, sans-serif;">
+                                Error
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                    <telerik:RadAjaxPanel ID="RadAjaxPanel1" LoadingPanelID="RadAjaxLoadingPanel1" runat="server"
+                         Width="100%">
+                        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                        </asp:ContentPlaceHolder>
+                    </telerik:RadAjaxPanel>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+        </telerik:RadPane>
+    </telerik:radsplitter>
+    <telerik:radwindowmanager runat="server" id="WinMgrUser">
+        <Windows>
+            <telerik:RadWindow ID="WinUser" runat="server" Behaviors="Close,Move,Resize" VisibleStatusbar="false"
+                VisibleOnPageLoad="false" Width="320px" Height="300px" Modal="true" NavigateUrl="~/Forms/UserInformation.aspx">
+            </telerik:RadWindow>
+        </Windows>
+    </telerik:radwindowmanager>
+    </form>
+</body>
+</html>
